@@ -2,6 +2,7 @@ import 'package:boilerplate/constants/app_theme.dart';
 import 'package:boilerplate/constants/strings.dart';
 import 'package:boilerplate/data/repository.dart';
 import 'package:boilerplate/di/components/service_locator.dart';
+import 'package:boilerplate/ui/login/login_page.dart';
 import 'package:boilerplate/ui/navbar.dart';
 import 'package:boilerplate/ui/register/register_page.dart';
 import 'package:boilerplate/utils/routes/routes.dart';
@@ -15,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/service/auth_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,11 +30,12 @@ class MyApp extends StatelessWidget {
   final LanguageStore _languageStore = LanguageStore(getIt<Repository>());
   final UserStore _userStore = UserStore(getIt<Repository>());
 
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<AuthService>(create: (_) => AuthService(FirebaseAuth.instance)),
+        Provider<AuthService>(create: (_) => AuthService()),
         StreamProvider(
           create: (context) => context.read<AuthService>().authStateChange, initialData: null,
         ),
@@ -62,7 +65,7 @@ class MyApp extends StatelessWidget {
               // Built-in localization of basic text for Cupertino widgets
               GlobalCupertinoLocalizations.delegate,
             ],
-            home: _userStore.isLoggedIn ? Navbar() : RegisterPage(),
+            home: _userStore.isLoggedIn ? Navbar() : LoginPage(),
           );
         },
       ),

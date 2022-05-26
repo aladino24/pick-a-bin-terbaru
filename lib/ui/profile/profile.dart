@@ -1,4 +1,6 @@
+import 'package:boilerplate/data/service/auth_service.dart';
 import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
+import 'package:boilerplate/ui/login/login_page.dart';
 import 'package:boilerplate/utils/routes/routes.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
@@ -15,6 +17,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   //Read data once from Realtime Database
   final ref = FirebaseDatabase.instance.ref().child('petugas');
+  AuthService authService = AuthService();
   
 
   @override
@@ -160,11 +163,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                         borderRadius: BorderRadius.circular(20.0),
                                       ),
                                     ),
-                                    onPressed: () {
-                                      SharedPreferences.getInstance().then((preference) {
-                                        preference.setBool(Preferences.is_logged_in, false);
-                                        Navigator.of(context).pushReplacementNamed(Routes.login);
-                                      });
+                                    onPressed: () async {
+                                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                                      prefs.remove('email');
+                                      authService.logout();
+                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
                                     },
                                   ),
                                 ),

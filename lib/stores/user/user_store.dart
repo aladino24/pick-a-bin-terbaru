@@ -58,7 +58,7 @@ abstract class _UserStore with Store {
 
   // actions:-------------------------------------------------------------------
   @action
-  Future login(String email, String password) async {
+  Future  login(String email, String password) async {
 
     final future = _repository.login(email, password);
     loginFuture = ObservableFuture(future);

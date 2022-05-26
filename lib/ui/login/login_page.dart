@@ -1,24 +1,28 @@
 import 'package:boilerplate/data/service/auth_service.dart';
 import 'package:boilerplate/ui/login/forgot_password_page.dart';
+import 'package:boilerplate/ui/navbar.dart';
 import 'package:boilerplate/ui/register/register_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get_it/get_it.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+
 
 class LoginPage extends StatelessWidget {
   // const LoginPage({ Key? key }) : super(key: key);
 
-  TextEditingController _userEmailController = new TextEditingController();
-  TextEditingController _passwordController = new TextEditingController();
+  // TextEditingController _userEmailController = new TextEditingController();
+  // TextEditingController _passwordController = new TextEditingController();
+  AuthService authService = AuthService();
+  final GlobalKey<FormState> _formKey = new GlobalKey();
 
   void _forgotPassword(BuildContext context) {
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(20),
-          topLeft: Radius.circular(20)
-        )
-      ),
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(20), topLeft: Radius.circular(20))),
       backgroundColor: Colors.white,
       context: context,
       builder: (_) {
@@ -63,6 +67,7 @@ class LoginPage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Form(
+                  key: _formKey,
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -129,22 +134,35 @@ class LoginPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(15),
                             ),
                             padding: EdgeInsets.symmetric(vertical: 15),
-                            onPressed: () {
-                              final String email =
-                                  _userEmailController.text.trim();
-                              final String password =
-                                  _passwordController.text.trim();
-
-                              if (email.isEmpty) {
+                            onPressed: () async {
+                              // final String email =
+                              //     _userEmailController.text.trim();
+                              // final String password =
+                              //     _passwordController.text.trim();
+                             
+                              if (_formKey.currentState!.validate()) {}
+                              if (authService.email.text.isEmpty) {
                                 print("Emailnya kosong");
                               } else {
-                                if (password.isEmpty) {
+                                if (authService.password.text.isEmpty) {
                                   print("Passwordnya kosong");
                                 } else {
+                                  authService.loginUser(context);
+                                  final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  prefs.setString('email', authService.email.text);              
+                                  
+
                                   //firebase auth
-                                  context
-                                      .read<AuthService>()
-                                      .login(email, password);
+                                  // context
+                                  //     .read<AuthService>()
+                                  //     .login(email, password).then((value) => {
+                                  //           print(value),
+                                  //           Navigator.pushReplacement(
+                                  //               context,
+                                  //               MaterialPageRoute(
+                                  //                   builder: (context) =>
+                                  //                       Navbar()))
+                                  //         });
                                 }
                               }
                             },
@@ -205,51 +223,80 @@ class LoginPage extends StatelessWidget {
 
   Widget _buildEmailForm() {
     return TextFormField(
-      controller: _userEmailController,
+      controller: authService.email,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please enter your email';
+        }
+        return null;
+      },
       decoration: InputDecoration(
-          prefixIcon: Icon(
-            Icons.email,
+        prefixIcon: Icon(
+          Icons.email,
+          color: Colors.green,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(
+            width: 2,
             color: Colors.green,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide(
-              width: 2,
-              color: Colors.green,
-            ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(
+            width: 2,
+            color: Colors.green,
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide(
-              width: 2,
-              color: Colors.green,
-            ),
-          )),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(
+            width: 2,
+            color: Colors.red,
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildPasswordForm() {
     return TextFormField(
-      controller: _passwordController,
+      controller: authService.password,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please enter your password';
+        }
+        return null;
+      },
+      obscureText: true,
       decoration: InputDecoration(
-          prefixIcon: Icon(
-            Icons.lock,
+        prefixIcon: Icon(
+          Icons.lock,
+          color: Colors.green,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(
+            width: 2,
             color: Colors.green,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide(
-              width: 2,
-              color: Colors.green,
-            ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(
+            width: 2,
+            color: Colors.green,
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide(
-              width: 2,
-              color: Colors.green,
-            ),
-          )),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(
+            width: 2,
+            color: Colors.red,
+          ),
+        ),
+      ),
     );
   }
 }
