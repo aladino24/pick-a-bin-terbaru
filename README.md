@@ -31,7 +31,7 @@ flutter pub get
 
 This project uses `inject` library that works with code generation, execute the following command to generate files:
 
-```
+```c
 flutter packages pub run build_runner build --delete-conflicting-outputs
 ```
 

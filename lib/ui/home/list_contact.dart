@@ -41,29 +41,30 @@ class _ListContactPageState extends State<ListContactPage> {
         ),
         body: FirebaseAnimatedList(
             query: ref,
-            itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
+            itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                Animation<double> animation, int index) {
               return Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: ListTile(
-                          title: Text(
-                            snapshot.child('nama').value.toString(),
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(snapshot.child('telp').value.toString()),
-                          leading: CircleAvatar(
-                            backgroundImage: AssetImage("assets/images/user_icon.png"),
-                          ),
-                        ),
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: ListTile(
+                      trailing: Icon(Icons.phone),
+                      title: Text(
+                        snapshot.child('nama').value.toString(),
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Divider(
-                        color: Colors.black,
-                      )
-                  ],
-                );
-            }
-        )
-    );
+                      subtitle: Text(snapshot.child('telp').value.toString()),
+                      leading: CircleAvatar(
+                        backgroundImage:
+                            AssetImage("assets/images/user_icon.png"),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.black,
+                  )
+                ],
+              );
+            }));
   }
 }

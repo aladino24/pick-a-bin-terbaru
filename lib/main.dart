@@ -18,7 +18,7 @@ Future<void> main() async {
   await setPreferredOrientations();
   await setupLocator();
   return runZonedGuarded(() async {
-    runApp(MaterialApp(home: email == null? MyApp(): Navbar()));
+    runApp(MaterialApp(home: email == null ? MyApp() : Navbar()));
   }, (error, stack) {
     print(stack);
     print(error);
