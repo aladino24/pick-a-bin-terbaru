@@ -2,14 +2,14 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 
-class ListContactPage extends StatefulWidget {
-  ListContactPage({Key? key}) : super(key: key);
+class DaftarPetugasPage extends StatefulWidget {
+  DaftarPetugasPage({Key? key}) : super(key: key);
 
   @override
-  State<ListContactPage> createState() => _ListContactPageState();
+  State<DaftarPetugasPage> createState() => _DaftarPetugasPageState();
 }
 
-class _ListContactPageState extends State<ListContactPage> {
+class _DaftarPetugasPageState extends State<DaftarPetugasPage> {
   final ref = FirebaseDatabase.instance.ref().child('petugas');
 
   @override
