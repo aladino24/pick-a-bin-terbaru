@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'di/components/service_locator.dart';
 
+//komentar
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -18,7 +19,9 @@ Future<void> main() async {
   await setPreferredOrientations();
   await setupLocator();
   return runZonedGuarded(() async {
-    runApp(MaterialApp(home: email == null? MyApp(): Navbar()));
+    runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: email == null? MyApp(): Navbar()));
   }, (error, stack) {
     print(stack);
     print(error);

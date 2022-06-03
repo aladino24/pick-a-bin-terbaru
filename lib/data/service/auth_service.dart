@@ -5,12 +5,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class AuthService {
-  final _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  
+  
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
 
   Stream<User?> get authStateChange => _auth.idTokenChanges();
 
+
+  //get current User ID
+  Future<String?> getCurrentUID() async {
+    final User? user = await _auth.currentUser;
+    return user?.uid;
+  }
+
+  // Future<String?> getCurrentEmail () async {
+  //   String? _userEmail = FirebaseAuth.instance.currentUser?.email;
+  //   return _userEmail;
+  // }
+
+  
   void loginUser(context) async {
     try {
       showDialog(

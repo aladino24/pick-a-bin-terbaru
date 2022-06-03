@@ -4,21 +4,16 @@ import 'package:boilerplate/ui/navbar.dart';
 import 'package:boilerplate/ui/register/register_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
 
-class LoginPage extends StatefulWidget {
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
+class LoginWargaPage extends StatelessWidget {
   // const LoginPage({ Key? key }) : super(key: key);
-  AuthService authService = AuthService();
 
+  // TextEditingController _userEmailController = new TextEditingController();
+  // TextEditingController _passwordController = new TextEditingController();
+  AuthService authService = AuthService();
   final GlobalKey<FormState> _formKey = new GlobalKey();
 
   void _forgotPassword(BuildContext context) {
@@ -85,42 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         SizedBox(height: 5),
-                        TextFormField(
-                        controller: authService.email,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.email,
-                            color: Colors.green,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                              width: 2,
-                              color: Colors.green,
-                            ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                              width: 2,
-                              color: Colors.green,
-                            ),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                              width: 2,
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
-                      ),
+                        _buildEmailForm(),
                         SizedBox(height: 15),
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
@@ -177,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                               //     _userEmailController.text.trim();
                               // final String password =
                               //     _passwordController.text.trim();
-                             
+
                               if (_formKey.currentState!.validate()) {}
                               if (authService.email.text.isEmpty) {
                                 print("Emailnya kosong");
@@ -185,19 +145,10 @@ class _LoginPageState extends State<LoginPage> {
                                 if (authService.password.text.isEmpty) {
                                   print("Passwordnya kosong");
                                 } else {
-                                  
-                                  final SharedPreferences prefs = await SharedPreferences.getInstance();
-                                  // final String? uid = await authService.getCurrentUID();
-                                  // print('uid: $uid');
-                                  // prefs.setString('uid', uid!);
-                                  // prefs.setString('uid', uid!);
-                                  prefs.setString('email', authService.email.text);
-                                  var email = prefs.getString('email');
-                                  print('email: $email');
                                   authService.loginUser(context);
-                                  
-                                              
-                                  
+                                  final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  prefs.setString('email', authService.email.text);
+
 
                                   //firebase auth
                                   // context
@@ -263,6 +214,45 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ]),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmailForm() {
+    return TextFormField(
+      controller: authService.email,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please enter your email';
+        }
+        return null;
+      },
+      decoration: InputDecoration(
+        prefixIcon: Icon(
+          Icons.email,
+          color: Colors.green,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(
+            width: 2,
+            color: Colors.green,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(
+            width: 2,
+            color: Colors.green,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(
+            width: 2,
+            color: Colors.red,
+          ),
         ),
       ),
     );

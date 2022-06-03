@@ -2,6 +2,7 @@ import 'package:boilerplate/constants/app_theme.dart';
 import 'package:boilerplate/constants/strings.dart';
 import 'package:boilerplate/data/repository.dart';
 import 'package:boilerplate/di/components/service_locator.dart';
+import 'package:boilerplate/ui/authentication/choose_role.dart';
 import 'package:boilerplate/ui/login/login_page.dart';
 import 'package:boilerplate/ui/navbar.dart';
 import 'package:boilerplate/ui/register/register_page.dart';
@@ -47,6 +48,8 @@ class MyApp extends StatelessWidget {
         name: 'global-observer',
         builder: (context) {
           return MaterialApp(
+            showSemanticsDebugger: false,
+            debugShowMaterialGrid: false,
             debugShowCheckedModeBanner: false,
             title: Strings.appName,
             theme: _themeStore.darkMode ? themeDataDark : themeData,
@@ -65,7 +68,7 @@ class MyApp extends StatelessWidget {
               // Built-in localization of basic text for Cupertino widgets
               GlobalCupertinoLocalizations.delegate,
             ],
-            home: _userStore.isLoggedIn ? Navbar() : LoginPage(),
+            home: _userStore.isLoggedIn ? Navbar() : ChooseRole(),
           );
         },
       ),
