@@ -15,13 +15,13 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  var email = prefs.getString('email');
+  var uid = prefs.getString('email');
   await setPreferredOrientations();
   await setupLocator();
   return runZonedGuarded(() async {
     runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: email == null? MyApp(): Navbar()));
+      home: uid == null? MyApp(): Navbar()));
   }, (error, stack) {
     print(stack);
     print(error);

@@ -5,14 +5,14 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomePetugasPage extends StatefulWidget {
+  const HomePetugasPage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePetugasPage> createState() => _HomePetugasPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePetugasPageState extends State<HomePetugasPage> {
   bool isChecked = false;
   final ref = FirebaseDatabase.instance.ref().child('jadwal');
 

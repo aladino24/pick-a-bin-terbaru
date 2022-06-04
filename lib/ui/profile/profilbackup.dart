@@ -1,22 +1,23 @@
 import 'package:boilerplate/data/service/auth_service.dart';
 import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
-import 'package:boilerplate/ui/login/login_page.dart';
+import 'package:boilerplate/ui/authentication/choose_role.dart';
+import 'package:boilerplate/ui/login/login_petugas.dart';
 import 'package:boilerplate/utils/routes/routes.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+class ProfilePetugasPage extends StatefulWidget {
+  const ProfilePetugasPage({Key? key}) : super(key: key);
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<ProfilePetugasPage> createState() => _ProfilePetugasPageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePetugasPageState extends State<ProfilePetugasPage> {
   //Read data once from Realtime Database
-  final ref = FirebaseDatabase.instance.ref().child('warga');
+  final ref = FirebaseDatabase.instance.ref().child('petugas');
   AuthService authService = AuthService();
    //get email from shared preferences
   
@@ -187,9 +188,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                       onPressed: () async {
                                         SharedPreferences prefs = await SharedPreferences.getInstance();
                                         // prefs.remove('uid');
-                                        prefs.remove('email');
+                                        prefs.clear();
                                         authService.logout();
-                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChooseRole()));
                                       },
                                     ),
                                   ),
@@ -238,7 +239,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Future<String?> _getPrefs() async {
+  Future<String?> 
+  _getPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? email = prefs.getString('email');
     return email;

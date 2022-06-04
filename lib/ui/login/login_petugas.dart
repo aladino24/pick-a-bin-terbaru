@@ -1,22 +1,23 @@
 import 'package:boilerplate/data/service/auth_service.dart';
 import 'package:boilerplate/ui/login/forgot_password_page.dart';
 import 'package:boilerplate/ui/navbar.dart';
-import 'package:boilerplate/ui/register/register_page.dart';
+import 'package:boilerplate/ui/register/register_petugas.dart';
+import 'package:boilerplate/ui/register/register_warga.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
-class LoginPage extends StatefulWidget {
+class LoginPetugasPage extends StatefulWidget {
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginPetugasPage> createState() => _LoginPetugasPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  // const LoginPage({ Key? key }) : super(key: key);
+class _LoginPetugasPageState extends State<LoginPetugasPage> {
+  // const LoginPetugasPage({ Key? key }) : super(key: key);
   AuthService authService = AuthService();
 
   final GlobalKey<FormState> _formKey = new GlobalKey();
@@ -86,41 +87,41 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         SizedBox(height: 5),
                         TextFormField(
-                        controller: authService.email,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.email,
-                            color: Colors.green,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                              width: 2,
+                          controller: authService.email,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter your email';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.email,
                               color: Colors.green,
                             ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                              width: 2,
-                              color: Colors.green,
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(
+                                width: 2,
+                                color: Colors.green,
+                              ),
                             ),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                              width: 2,
-                              color: Colors.red,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(
+                                width: 2,
+                                color: Colors.green,
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(
+                                width: 2,
+                                color: Colors.red,
+                              ),
                             ),
                           ),
                         ),
-                      ),
                         SizedBox(height: 15),
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
@@ -173,31 +174,74 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             padding: EdgeInsets.symmetric(vertical: 15),
                             onPressed: () async {
+                              final ref = FirebaseDatabase.instance
+                                  .ref()
+                                  .child('petugas');
+                              final snapshot = await ref
+                                  .orderByChild('email')
+                                  .equalTo(authService.email.text)
+                                  .get();
+                              // if (snapshot.exists) {
+                              //   print(snapshot.value);
+                              // }else{
+                              //   print('tidak ada');
+                              // }
+
                               // final String email =
                               //     _userEmailController.text.trim();
                               // final String password =
                               //     _passwordController.text.trim();
-                             
+
                               if (_formKey.currentState!.validate()) {}
                               if (authService.email.text.isEmpty) {
                                 print("Emailnya kosong");
                               } else {
                                 if (authService.password.text.isEmpty) {
                                   print("Passwordnya kosong");
+                                } else if (snapshot.value == null) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text(
+                                            "Akun tidak terdaftar di petugas"),
+                                        content: Text(
+                                            "Pastikan Username dan Password Anda Benar"),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text("Close"),
+                                            color: Colors.red,
+                                            onPressed: () {
+                                              Navigator.of(context).pushReplacement(
+                                                  MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          LoginPetugasPage()));
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
                                 } else {
-                                  
-                                  final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  final SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  FirebaseAuth.instance
+                                      .authStateChanges()
+                                      .listen((User? user) {
+                                    if (user != null) {
+                                      prefs.setString('uid', user.uid);
+                                    }
+                                  });
                                   // final String? uid = await authService.getCurrentUID();
                                   // print('uid: $uid');
                                   // prefs.setString('uid', uid!);
                                   // prefs.setString('uid', uid!);
-                                  prefs.setString('email', authService.email.text);
+                                  prefs.setString(
+                                      'email', authService.email.text);
                                   var email = prefs.getString('email');
                                   print('email: $email');
-                                  authService.loginUser(context);
-                                  
-                                              
-                                  
+                                  authService.loginUserPetugas(context);
 
                                   //firebase auth
                                   // context
@@ -248,11 +292,11 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        Navigator.push(
+                                        Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    RegisterPage()));
+                                                    RegisterPetugasPage()));
                                       },
                                   ),
                                 ])),

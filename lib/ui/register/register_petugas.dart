@@ -1,8 +1,9 @@
 import 'package:boilerplate/ui/login/login.dart';
-import 'package:boilerplate/ui/login/login_page.dart';
+import 'package:boilerplate/ui/login/login_warga.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/gestures.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/service/auth_service.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -20,15 +21,12 @@ class _RegisterPetugasPageState extends State<RegisterPetugasPage> {
   final TextEditingController _alamatController = new TextEditingController();
   final TextEditingController _emailController = new TextEditingController();
   final TextEditingController _passwordController = new TextEditingController();
-  final TextEditingController _tglAmbilSampahControler =
-  new TextEditingController();
 
   final GlobalKey<FormState> _formKey = new GlobalKey();
   final _auth = AuthService();
 
   @override
   void initState() {
-    _tglAmbilSampahControler.text = "";
     super.initState();
   }
 
@@ -259,8 +257,6 @@ class _RegisterPetugasPageState extends State<RegisterPetugasPage> {
                             final String email = _emailController.text.trim();
                             final String password =
                             _passwordController.text.trim();
-                            final String tglAmbilSampah =
-                            _tglAmbilSampahControler.text.trim();
 
                             if (_formKey.currentState!.validate()) {}
 
@@ -276,35 +272,28 @@ class _RegisterPetugasPageState extends State<RegisterPetugasPage> {
                                   if (password.isEmpty) {
                                     print("Password kosong");
                                   } else {
-                                    if (tglAmbilSampah.isEmpty) {
-                                      print(
-                                          "Tanggal Pengambilan Sampah kosong");
-                                    } else {
-                                      context
-                                          .read<AuthService>()
-                                          .register(email, password)
-                                          .then((value) async {
-                                        DatabaseReference data =
-                                        FirebaseDatabase.instance
-                                            .ref("petugas");
-                                        data.push().set({
-                                          "nama": namaLengkap,
-                                          "alamat": alamat,
-                                          "email": email,
-                                          "tglAmbilSampah": tglAmbilSampah,
-                                        });
-                                        Fluttertoast.showToast(
-                                            msg: "Registration Successfully",
-                                            toastLength: Toast.LENGTH_SHORT);
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    LoginPage()));
+                                    context
+                                        .read<AuthService>()
+                                        .register(email, password)
+                                        .then((value) async {
+                                      DatabaseReference data =
+                                      FirebaseDatabase.instance
+                                          .ref("petugas");
+                                      data.push().set({
+                                        "nama": namaLengkap,
+                                        "alamat": alamat,
+                                        "email": email,
+                                        'status' : "petugas"
                                       });
-                                      // successful login notification
-
-                                    }
+                                      Fluttertoast.showToast(
+                                          msg: "Registration Successfully",
+                                          toastLength: Toast.LENGTH_SHORT);
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoginWargaPage()));
+                                    });
                                   }
                                 }
                               }
@@ -347,7 +336,7 @@ class _RegisterPetugasPageState extends State<RegisterPetugasPage> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => LoginPage()));
+                                            builder: (context) => LoginWargaPage()));
                                   },
                               ),
                             ])),
@@ -362,4 +351,7 @@ class _RegisterPetugasPageState extends State<RegisterPetugasPage> {
       ),
     );
   }
+
+  
+
 }

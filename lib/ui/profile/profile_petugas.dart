@@ -1,20 +1,22 @@
 import 'package:boilerplate/data/service/auth_service.dart';
 import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
-import 'package:boilerplate/ui/login/login_page.dart';
+import 'package:boilerplate/ui/authentication/choose_role.dart';
+import 'package:boilerplate/ui/login/login_petugas.dart';
+import 'package:boilerplate/ui/login/login_warga.dart';
 import 'package:boilerplate/utils/routes/routes.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserProfilePage extends StatefulWidget {
-  const UserProfilePage({Key? key}) : super(key: key);
+class ProfilePetugasPage extends StatefulWidget {
+  const ProfilePetugasPage({Key? key}) : super(key: key);
 
   @override
-  State<UserProfilePage> createState() => _UserProfilePageState();
+  State<ProfilePetugasPage> createState() => _ProfilePetugasPageState();
 }
 
-class _UserProfilePageState extends State<UserProfilePage> {
+class _ProfilePetugasPageState extends State<ProfilePetugasPage> {
   //Read data once from Realtime Database
   final ref = FirebaseDatabase.instance.ref().child('petugas');
   AuthService authService = AuthService();
@@ -38,8 +40,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
           ),
           backgroundColor: Colors.transparent,
           elevation: 0),
-      body: FirebaseAnimatedList(
-          query: ref.orderByChild('nama').equalTo('Aradhana Luqman'),
+      body: FutureBuilder(
+        future: _getPrefs(),
+        builder: (context,snapshot){
+          if(snapshot.hasData){
+            print(snapshot.data);
+            return FirebaseAnimatedList(
+          query: ref.orderByChild('email').equalTo("${snapshot.data}"),
           itemBuilder: (BuildContext context, DataSnapshot snapshot,
               Animation<double> animation, int index) {
             return Column(
@@ -165,9 +172,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                         ),
                                         onPressed: () async {
                                           SharedPreferences prefs = await SharedPreferences.getInstance();
-                                          prefs.remove('email');
+                                          prefs.clear();
                                           authService.logout();
-                                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChooseRole()));
                                         },
                                       ),
                                     ),
@@ -191,7 +198,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                             radius: 60,
                             backgroundColor: Colors.green,
                             child: CircleAvatar(
-                              backgroundImage: AssetImage('assets/images/profile.png'),
+                              backgroundImage: AssetImage('assets/images/user_icon.png'),
                               radius: 68,
                             ),
                           ),
@@ -205,7 +212,21 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 ),
               ],
             );
-          }),
+          });
+          }else{
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        }
+      )
     );
+  }
+
+   Future<String?> 
+  _getPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? email = prefs.getString('email');
+    return email;
   }
 }

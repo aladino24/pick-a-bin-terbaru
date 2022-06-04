@@ -1,5 +1,6 @@
 import 'package:boilerplate/ui/login/login.dart';
-import 'package:boilerplate/ui/login/login_page.dart';
+import 'package:boilerplate/ui/login/login_petugas.dart';
+import 'package:boilerplate/ui/login/login_warga.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/gestures.dart';
@@ -353,7 +354,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    LoginPage()));
+                                                    LoginWargaPage()));
                                       });
                                       // successful login notification
 
@@ -400,7 +401,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => LoginPage()));
+                                            builder: (context) => LoginWargaPage()));
                                   },
                               ),
                             ])),

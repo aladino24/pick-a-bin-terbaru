@@ -1,4 +1,5 @@
-import 'package:boilerplate/ui/login/login_page.dart';
+import 'package:boilerplate/ui/login/login_petugas.dart';
+import 'package:boilerplate/ui/login/login_warga.dart';
 import 'package:boilerplate/ui/navbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class AuthService {
   // }
 
   
-  void loginUser(context) async {
+  void loginUserWarga(context) async {
     try {
       showDialog(
           context: context,
@@ -44,7 +45,7 @@ class AuthService {
           .then((value) => {
                 print("Login Successfully"),
                 
-                Navigator.push(
+                Navigator.pushReplacement(
                     context, MaterialPageRoute(builder: (context) => Navbar()))
               });
     } catch (e) {
@@ -60,8 +61,53 @@ class AuthService {
                 child: Text("Close"),
                 color: Colors.red,
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => LoginPage()));
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (BuildContext context) => LoginWargaPage()));
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void loginUserPetugas(context) async {
+    try {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Center(
+                  child: CircularProgressIndicator(
+                backgroundColor: Colors.green,
+              )),
+            );
+          });
+      await _auth
+          .signInWithEmailAndPassword(
+              email: email.text, password: password.text)
+          .then((value) => {
+                print("Login Successfully"),
+                
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (context) => Navbar()))
+              });
+    } catch (e) {
+      // print(e.toString());
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Username atau Password Salah"),
+            content: Text("Pastikan Username dan Password Anda Benar"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Close"),
+                color: Colors.red,
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (BuildContext context) => LoginPetugasPage()));
                 },
               ),
             ],

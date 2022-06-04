@@ -1,19 +1,22 @@
 import 'package:boilerplate/data/service/auth_service.dart';
 import 'package:boilerplate/ui/login/forgot_password_page.dart';
 import 'package:boilerplate/ui/navbar.dart';
-import 'package:boilerplate/ui/register/register_page.dart';
+import 'package:boilerplate/ui/register/register_warga.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+class LoginWargaPage extends StatefulWidget {
+  @override
+  State<LoginWargaPage> createState() => _LoginWargaPageState();
+}
 
-
-class LoginWargaPage extends StatelessWidget {
+class _LoginWargaPageState extends State<LoginWargaPage> {
   // const LoginPage({ Key? key }) : super(key: key);
-
-  // TextEditingController _userEmailController = new TextEditingController();
-  // TextEditingController _passwordController = new TextEditingController();
   AuthService authService = AuthService();
+
   final GlobalKey<FormState> _formKey = new GlobalKey();
 
   void _forgotPassword(BuildContext context) {
@@ -133,6 +136,13 @@ class LoginWargaPage extends StatelessWidget {
                             ),
                             padding: EdgeInsets.symmetric(vertical: 15),
                             onPressed: () async {
+                              final ref = FirebaseDatabase.instance
+                                  .ref()
+                                  .child('warga');
+                              final snapshot = await ref
+                                  .orderByChild('email')
+                                  .equalTo(authService.email.text)
+                                  .get();
                               // final String email =
                               //     _userEmailController.text.trim();
                               // final String password =
@@ -144,11 +154,44 @@ class LoginWargaPage extends StatelessWidget {
                               } else {
                                 if (authService.password.text.isEmpty) {
                                   print("Passwordnya kosong");
+                                } else if (snapshot.value == null) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text(
+                                            "Akun tidak terdaftar di daftar warga"),
+                                        content: Text(
+                                            "Pastikan Username dan Password Anda Benar"),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text("Close"),
+                                            color: Colors.red,
+                                            onPressed: () {
+                                              Navigator.of(context).pop(
+                                                  MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          LoginWargaPage()));
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
                                 } else {
-                                  authService.loginUser(context);
-                                  final SharedPreferences prefs = await SharedPreferences.getInstance();
-                                  prefs.setString('email', authService.email.text);
-
+                                  authService.loginUserWarga(context);
+                                  final SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  FirebaseAuth.instance
+                                      .authStateChanges()
+                                      .listen((User? user) {
+                                    if (user != null) {
+                                      prefs.setString('uid', user.uid);
+                                    }
+                                  });
+                                  prefs.setString(
+                                      'email', authService.email.text);
 
                                   //firebase auth
                                   // context

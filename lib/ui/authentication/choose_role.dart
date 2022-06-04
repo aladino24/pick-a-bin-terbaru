@@ -1,7 +1,8 @@
 // import 'package:boilerplate/constants/font_family.dart';
-import 'package:boilerplate/ui/login/login_page.dart';
+import 'package:boilerplate/ui/login/login_petugas.dart';
 import 'package:boilerplate/ui/login/login_warga.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChooseRole extends StatelessWidget {
   const ChooseRole({Key? key}) : super(key: key);
@@ -54,8 +55,10 @@ class ChooseRole extends StatelessWidget {
                             width: 500,
                             margin: EdgeInsets.only(top: 10),
                             child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                              onPressed: ()async{
+                                final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                prefs.setString('role', 'petugas');
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPetugasPage()));
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(17),
@@ -69,7 +72,9 @@ class ChooseRole extends StatelessWidget {
                           Container(
                             width: 500,
                             child: OutlinedButton(
-                              onPressed: () {
+                              onPressed: ()async{
+                                final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                prefs.setString('role', 'warga');
                                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginWargaPage()));
                               },
                               child: Padding(
