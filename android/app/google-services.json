@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "320940399511",
+    "firebase_url": "https://pick-a-bin-app-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "pick-a-bin-app",
+    "storage_bucket": "pick-a-bin-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:320940399511:android:85dce424f47f55e73102d2",
+        "android_client_info": {
+          "package_name": "com.pickabin.pickabin_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "320940399511-fnhlspdchjfp8os4k9ftj0dmn20gafo7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pickabin.pickabin_app",
+            "certificate_hash": "30d68132089410084570e8947bc54a38a4d93974"
+          }
+        },
+        {
+          "client_id": "320940399511-5rfvuj3nfrsakb5busnnaqn3u9op46c1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPvMz2o18tM9LyjdOIySxOz0qXsS3e2Vs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "320940399511-5rfvuj3nfrsakb5busnnaqn3u9op46c1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
