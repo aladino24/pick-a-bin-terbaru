@@ -84,7 +84,7 @@ class ListDonePage extends StatelessWidget {
   }
 }
 
-//function timer to insert data to aktivitas after 1 minute
+// function timer to insert data to aktivitas after 1 minute
 
 // void _getTimer({required BuildContext context, required DataSnapshot snapshot, required String date, required String time, required String instansi, required String alamat, required String telp, required String penanggungJawab}) async {
 //   final SharedPreferences prefs = await SharedPreferences.getInstance();

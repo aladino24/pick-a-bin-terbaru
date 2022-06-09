@@ -43,8 +43,21 @@ class _SchedulePageState extends State<SchedulePage> {
                                   .toString(),
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        subtitle:
-                            Text(snapshot.child('alamat').value.toString()),
+                        subtitle: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.topLeft,
+                                child: Text(
+                                    snapshot.child('alamat').value.toString())),
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Text("${snapshot.child('tanggal').value.toString()}" +
+                                  " " +
+                                  "${snapshot.child('time').value.toString()}"),
+                            ),
+                          ],
+                        ),
+                        isThreeLine: true,
                         secondary: CircleAvatar(
                             backgroundImage: AssetImage(
                           "assets/images/user_icon.png",
@@ -68,7 +81,10 @@ class _SchedulePageState extends State<SchedulePage> {
                               .child('jadwal/$key')
                               .child('status')
                               .get();
-
+                          final jmlHari = await database
+                              .child('jadwal/$key')
+                              .child('tglPengambilanSampah')
+                              .get();
                           DatabaseReference up =
                               FirebaseDatabase.instance.ref("jadwal/$key");
                           up.update({
@@ -76,38 +92,19 @@ class _SchedulePageState extends State<SchedulePage> {
                             "status": true,
                           });
 
-                          print("value: ${status.value}");
-
-                          if(data.exists){
-                            Timer(Duration(minutes: 1), (){
-                              up.update({
-                              "status": false,
-                            });
-                            });
-                          }else{
-                            Timer(Duration(minutes: 2), () {
-                            database.child('jadwal').push().set({
-                              'instansi':
-                                  snapshot.child('instansi').value.toString(),
-                              'penanggungJawab': snapshot
-                                  .child('penanggungJawab')
-                                  .value
-                                  .toString(),
-                              'alamat':
-                                  snapshot.child('alamat').value.toString(),
-                              'telp': snapshot.child('telp').value.toString(),
-                              'status': false,
-                            });
-                          });
-                          }
+                          int? jmlHariInt = jmlHari.value as int;
+                          print(jmlHariInt);
+                          
+                          
+                          // print("Jumlah : ${jumlahHari}");
+                          // print("value: ${status.value}");
 
                           
 
-                          //setelah ganti hari tapi belum konfirmasi data di langsung insert ke activity
-                      
-                          if (data.value != null && status.value == false) {
-                            Timer(Duration(seconds: 10), () {
-                              database.child("aktivitas").push().set({
+                          if (status.value == false) {
+                            Timer(Duration(days: jmlHariInt), () {
+                              database.child('jadwal').push().set({
+                                "status": false,
                                 'instansi':
                                     snapshot.child('instansi').value.toString(),
                                 'penanggungJawab': snapshot
@@ -116,22 +113,44 @@ class _SchedulePageState extends State<SchedulePage> {
                                     .toString(),
                                 'alamat':
                                     snapshot.child('alamat').value.toString(),
-                                'telp': snapshot.child('telp').value.toString(),
                                 'tanggal': DateFormat('dd/MM/yyyy')
                                     .format(DateTime.now())
                                     .toString(),
-                                'waktu': DateFormat('hh:mm')
+                                'time': DateFormat('HH:mm')
                                     .format(DateTime.now())
                                     .toString(),
-                                'petugas': prefs.getString('nama'),
+                                'tglPengambilanSampah' : snapshot.child('tglPengambilanSampah').value,
                               });
-                              DatabaseReference del =
-                                  FirebaseDatabase.instance.ref("jadwal/$key");
-                              del.remove();
                             });
                           }
 
+                          //setelah ganti hari tapi belum konfirmasi data di langsung insert ke activity
 
+                          // if (data.value != null && status.value == false) {
+                          //   Timer(Duration(seconds: 10), () {
+                          //     database.child("aktivitas").push().set({
+                          //       'instansi':
+                          //           snapshot.child('instansi').value.toString(),
+                          //       'penanggungJawab': snapshot
+                          //           .child('penanggungJawab')
+                          //           .value
+                          //           .toString(),
+                          //       'alamat':
+                          //           snapshot.child('alamat').value.toString(),
+                          //       'telp': snapshot.child('telp').value.toString(),
+                          //       'tanggal': DateFormat('dd/MM/yyyy')
+                          //           .format(DateTime.now())
+                          //           .toString(),
+                          //       'waktu': DateFormat('hh:mm')
+                          //           .format(DateTime.now())
+                          //           .toString(),
+                          //       'petugas': prefs.getString('nama'),
+                          //     });
+                          //     DatabaseReference del =
+                          //         FirebaseDatabase.instance.ref("jadwal/$key");
+                          //     del.remove();
+                          //   });
+                          // }
                         },
                       ),
                     ],
