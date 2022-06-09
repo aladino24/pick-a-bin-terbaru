@@ -94,15 +94,6 @@ class AktifitasWarga extends StatelessWidget {
                                 TextSpan(
                                   children: <InlineSpan>[
                                     WidgetSpan(
-                                        child: Icon(Icons.person_outline,
-                                            color: Colors.green)),
-                                    TextSpan(
-                                        text: snapshot
-                                                .child('penanggungjawab')
-                                                .value
-                                                .toString() +
-                                            "\n"),
-                                    WidgetSpan(
                                         child: Icon(Icons.location_on_outlined,
                                             color: Colors.green)),
                                     TextSpan(

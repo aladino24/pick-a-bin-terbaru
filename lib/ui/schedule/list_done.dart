@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
@@ -9,14 +11,20 @@ class ListDonePage extends StatelessWidget {
   ListDonePage({Key? key}) : super(key: key);
   final fb = FirebaseDatabase.instance;
   final databaseRef = FirebaseDatabase.instance.ref();
+  
 
   @override
   Widget build(BuildContext context) {
     final ref = fb.ref().child('jadwal').orderByChild('status').equalTo(true);
+    
     return Scaffold(
       body: FirebaseAnimatedList(
           query: ref,
           itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
+            
+            Timer(Duration(minutes: 1), (){
+
+            });
             return InkWell(
               child: Padding(
                 padding: EdgeInsets.only(top: 0),
@@ -75,6 +83,28 @@ class ListDonePage extends StatelessWidget {
     );
   }
 }
+
+//function timer to insert data to aktivitas after 1 minute
+
+// void _getTimer({required BuildContext context, required DataSnapshot snapshot, required String date, required String time, required String instansi, required String alamat, required String telp, required String penanggungJawab}) async {
+//   final SharedPreferences prefs = await SharedPreferences.getInstance();
+//   final database = FirebaseDatabase.instance.ref();
+//   var key = snapshot.key;
+//   final data = await database.child('jadwal/$key').get();
+//   final status = await database.child('jadwal/$key').child('status').get();
+  
+//   database.child("aktivitas").push().set({
+//     'instansi': instansi,
+//     'penanggungjawab': penanggungJawab,
+//     'alamat': alamat,
+//     'telp': telp,
+//     'tanggal': date,
+//     'waktu': time,
+//     'petugas' : prefs.getString('nama'),
+//   });
+
+  
+// }
 
 void launchWhatsApp({required int phone}) async {
   String url() {
