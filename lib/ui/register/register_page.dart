@@ -16,14 +16,16 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final TextEditingController _namaController = new TextEditingController();
   final TextEditingController _instansiController = new TextEditingController();
-  final TextEditingController _penanggungJawabController = new TextEditingController();
+  final TextEditingController _penanggungJawabController =
+      new TextEditingController();
   final TextEditingController _alamatController = new TextEditingController();
   final TextEditingController _emailController = new TextEditingController();
   final TextEditingController _telpController = new TextEditingController();
   final TextEditingController _passwordController = new TextEditingController();
-  final TextEditingController _tglAmbilSampahControler = new TextEditingController();
-
+  final TextEditingController _tglAmbilSampahControler =
+      new TextEditingController();
 
   final GlobalKey<FormState> _formKey = new GlobalKey();
   final _auth = AuthService();
@@ -64,7 +66,54 @@ class _RegisterPageState extends State<RegisterPage> {
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
-                        "Nama Instansi",
+                        "Nama Lengkap",
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    TextFormField(
+                      controller: _namaController,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Nama Lengkap Harus Diisi';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.person,
+                          color: Colors.green,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide(
+                            width: 2,
+                            color: Colors.green,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide(
+                            width: 2,
+                            color: Colors.green,
+                          ),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide(
+                            width: 2,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        "Instansi",
                         style: TextStyle(
                           fontSize: 18,
                         ),
@@ -81,7 +130,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       },
                       decoration: InputDecoration(
                         prefixIcon: Icon(
-                          Icons.person,
+                          Icons.business,
                           color: Colors.green,
                         ),
                         focusedBorder: OutlineInputBorder(
@@ -167,6 +216,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     SizedBox(height: 5),
                     TextFormField(
                       controller: _alamatController,
+                      maxLines: 3,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Alamat Harus Diisi';
@@ -260,6 +310,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     SizedBox(height: 5),
                     TextFormField(
+                      keyboardType: TextInputType.emailAddress,
                       controller: _emailController,
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -396,81 +447,80 @@ class _RegisterPageState extends State<RegisterPage> {
                       height: 40,
                       child: ElevatedButton(
                           onPressed: () async {
-                            final String namaInstansi = _instansiController.text.trim();
-                            final String penanggungJawab = _penanggungJawabController.text.trim();
+                            final String namaLengkap =
+                                _namaController.text.trim();
+                            final String namaInstansi =
+                                _instansiController.text.trim();
+                            final String penanggungJawab =
+                                _penanggungJawabController.text.trim();
                             final String alamat = _alamatController.text.trim();
                             final String email = _emailController.text.trim();
-                            final String password = _passwordController.text.trim();
-                            final String tglAmbilSampah =  _tglAmbilSampahControler.text.trim();
+                            final String password =
+                                _passwordController.text.trim();
+                            final String tglAmbilSampah =
+                                _tglAmbilSampahControler.text.trim();
                             final String telp = _telpController.text.trim();
 
                             if (_formKey.currentState!.validate()) {}
 
-                            if (namaInstansi.isEmpty) {
+                            if (namaLengkap.isEmpty) {
                               print("Nama Lengkap kosong");
+                            } else if (namaInstansi.isEmpty) {
+                              print("Nama Instansi kosong");
+                            } else if (penanggungJawab.isEmpty) {
+                              print("Penanggung Jawab kosong");
+                            } else if (alamat.isEmpty) {
+                              print("Alamat kosong");
+                            } else if (email.isEmpty) {
+                              print("Email kosong");
+                            } else if (password.isEmpty) {
+                              print("Password kosong");
+                            } else if (tglAmbilSampah.isEmpty) {
+                              print("Tanggal Pengambilan Sampah kosong");
+                            } else if (telp.isEmpty) {
+                              print("Telp kosong");
                             } else {
-                              if(penanggungJawab.isEmpty){
-                                print("Penanggung Jawab kosong");
-                              }else{
-                                if (alamat.isEmpty) {
-                                  print("Alamat kosong");
-                                } else {
-                                  if (email.isEmpty) {
-                                    print("Email kosong");
-                                  } else {
-                                    if (password.isEmpty) {
-                                      print("Password kosong");
-                                    } else {
-                                      if(telp.isEmpty){
-                                        print("No. Telp kosong");
-                                      }else{
-                                        if (tglAmbilSampah.isEmpty) {
-                                          print(
-                                              "Tanggal Pengambilan Sampah kosong");
-                                        } else {
-                                          context
-                                              .read<AuthService>()
-                                              .register(penanggungJawab,email, password)
-                                              .then((value) async {
-                                            DatabaseReference data =
-                                            FirebaseDatabase.instance
-                                                .ref("warga");
-                                            data.push().set({
-                                              "instansi": namaInstansi,
-                                              "penanggungJawab" : penanggungJawab,
-                                              "alamat": alamat,
-                                              "email": email,
-                                              "telp" : telp,
-                                              "tglAmbilSampah": tglAmbilSampah,
-                                            });
-                                            DatabaseReference dataJadwal =
-                                            FirebaseDatabase.instance
-                                                .ref("jadwal");
-                                            dataJadwal.push().set({
-                                              "instansi": namaInstansi,
-                                              "penanggungJawab" : penanggungJawab,
-                                              "alamat": alamat,
-                                              "email": email,
-                                              "telp" : telp,
-                                              "status" : false
-                                            });
-                                            Fluttertoast.showToast(
-                                                msg: "Registration Successfully",
-                                                toastLength: Toast.LENGTH_SHORT);
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        LoginWargaPage()));
-                                          });
-                                          // successful login notification
+                              context
+                                  .read<AuthService>()
+                                  .register(namaLengkap, email, password)
+                                  .then((value) async {
+                                DatabaseReference data =
+                                    FirebaseDatabase.instance.ref("warga");
+                                data.push().set({
+                                  "namaLengkap": namaLengkap,
+                                  "instansi": namaInstansi,
+                                  "penanggungJawab": penanggungJawab,
+                                  "alamat": alamat,
+                                  "email": email,
+                                  "telp": telp,
+                                  "tglAmbilSampah": tglAmbilSampah,
+                                  
+                                });
+                                DatabaseReference dataJadwal =
+                                    FirebaseDatabase.instance.ref("jadwal");
+                                dataJadwal.push().set({
+                                  "nama": namaLengkap,
+                                  "instansi": namaInstansi,
+                                  "penanggungJawab": penanggungJawab,
+                                  "alamat": alamat,
+                                  "email": email,
+                                  "telp": telp,
+                                  'tanggal' : DateFormat('dd/MM/yyyy')
+                                    .format(DateTime.now())
+                                    .toString(),
+                                  'time': DateFormat('hh:mm').format(DateTime.now()).toString(),
+                                  "tglAmbilSampah": tglAmbilSampah,
+                                  "status": false
+                                });
 
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            LoginWargaPage()));
+                              });
+                              // successful login notification
+
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -510,7 +560,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => LoginWargaPage()));
+                                            builder: (context) =>
+                                                LoginWargaPage()));
                                   },
                               ),
                             ])),

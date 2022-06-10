@@ -3,6 +3,7 @@ import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
 import 'package:boilerplate/ui/authentication/choose_role.dart';
 import 'package:boilerplate/ui/login/login_petugas.dart';
 import 'package:boilerplate/ui/login/login_warga.dart';
+import 'package:boilerplate/ui/update_profile/update_warga.dart';
 import 'package:boilerplate/utils/routes/routes.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
@@ -76,7 +77,7 @@ class _ProfileWargaPageState extends State<ProfileWargaPage> {
                         height: 85.0,
                       ),
                       Container(
-                        height: 500.0,
+                        height: 560.0,
                         width: 320,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20.0),
@@ -95,7 +96,7 @@ class _ProfileWargaPageState extends State<ProfileWargaPage> {
                                   Text(
                                     'Nama Instansi',
                                     style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
                                     ),
@@ -103,7 +104,7 @@ class _ProfileWargaPageState extends State<ProfileWargaPage> {
                                   Text(
                                     snapshot.child('instansi').value.toString(),
                                     style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 18,
                                       color: Colors.black45,
                                     ),
                                   ),
@@ -120,7 +121,7 @@ class _ProfileWargaPageState extends State<ProfileWargaPage> {
                                   Text(
                                     'Penanggung Jawab',
                                     style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
                                     ),
@@ -128,7 +129,7 @@ class _ProfileWargaPageState extends State<ProfileWargaPage> {
                                   Text(
                                     snapshot.child('penanggungJawab').value.toString(),
                                     style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 18,
                                       color: Colors.black45,
                                     ),
                                   ),
@@ -144,7 +145,7 @@ class _ProfileWargaPageState extends State<ProfileWargaPage> {
                                   Text(
                                     'Alamat',
                                     style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
                                     ),
@@ -152,7 +153,7 @@ class _ProfileWargaPageState extends State<ProfileWargaPage> {
                                   Text(
                                     snapshot.child('alamat').value.toString(),
                                     style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 16,
                                       color: Colors.black45,
                                     ),
                                   ),
@@ -169,7 +170,7 @@ class _ProfileWargaPageState extends State<ProfileWargaPage> {
                                   Text(
                                     'No Telepon',
                                     style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
                                     ),
@@ -177,7 +178,7 @@ class _ProfileWargaPageState extends State<ProfileWargaPage> {
                                   Text(
                                     snapshot.child('telp').value.toString(),
                                     style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 18,
                                       color: Colors.black45,
                                     ),
                                   ),
@@ -194,7 +195,7 @@ class _ProfileWargaPageState extends State<ProfileWargaPage> {
                                   Text(
                                     'Email',
                                     style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
                                     ),
@@ -202,7 +203,7 @@ class _ProfileWargaPageState extends State<ProfileWargaPage> {
                                   Text(
                                     snapshot.child('email').value.toString(),
                                     style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 18,
                                       color: Colors.black45,
                                     ),
                                   ),
@@ -242,6 +243,34 @@ class _ProfileWargaPageState extends State<ProfileWargaPage> {
                                         prefs.clear();
                                         authService.logout();
                                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChooseRole()));
+                                      },
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 270,
+                                    child: ElevatedButton(
+                                      child: const Center(
+                                        child: Text(
+                                          'Update Profile',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.green,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20.0),
+                                        ),
+                                      ),
+                                      
+                                      onPressed: (){
+                                        // SharedPreferences prefs = await SharedPreferences.getInstance();
+                                        // // prefs.remove('uid');
+                                        // prefs.clear();
+                                        // authService.logout();
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateWargaPage()));
                                       },
                                     ),
                                   ),

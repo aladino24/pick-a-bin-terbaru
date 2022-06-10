@@ -4,6 +4,7 @@ import 'package:boilerplate/ui/navbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -105,13 +106,47 @@ class AuthService {
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       await _auth.currentUser?.updateDisplayName(nama);
-      return "Registration Successful";
+      Fluttertoast.showToast(msg: "Registration Successfully",toastLength: Toast.LENGTH_SHORT);
+      return "Registration Successfully";
       //Register Successful Notification
 
     } catch (e) {
       return e.toString();
     }
   }
+
+  //Reset Password
+  Future resetPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      Fluttertoast.showToast(msg: "Reset Password Successfully",toastLength: Toast.LENGTH_SHORT);
+    } on FirebaseAuthException catch (e) {
+      return e.toString();
+    }
+ 
+  }
+
+  //Update Profile email
+  // Future updateEmail(String email) async {
+  //   try {
+  //     await _auth.currentUser?.updateEmail(email);
+  //     Fluttertoast.showToast(msg: "Update Profile Successfully",toastLength: Toast.LENGTH_SHORT);
+  //   } catch (e) {
+  //     return e.toString();
+  //   }
+  // }
+
+  //Update Profile displayName
+  Future updateDisplayName(String nama) async {
+    try {
+      await _auth.currentUser?.updateDisplayName(nama);
+      Fluttertoast.showToast(msg: "Update Profile Successfully",toastLength: Toast.LENGTH_SHORT);
+    } catch (e) {
+      return e.toString();
+    }
+  }
+  
+   
 
   Future<void> logout() async {
     await _auth.signOut();

@@ -14,7 +14,11 @@ class HomePetugasPage extends StatefulWidget {
 
 class _HomePetugasPageState extends State<HomePetugasPage> {
   bool isChecked = false;
-  final ref = FirebaseDatabase.instance.ref().child('jadwal');
+  final ref = FirebaseDatabase.instance
+      .ref()
+      .child('jadwal')
+      .orderByChild('status')
+      .equalTo(false);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +39,9 @@ class _HomePetugasPageState extends State<HomePetugasPage> {
               "Hi, Petugas!",
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
-            Image.asset("assets/images/home.jpg",),
+            Image.asset(
+              "assets/images/home.jpg",
+            ),
             Container(
                 margin: const EdgeInsets.only(bottom: 20),
                 alignment: Alignment.center,
@@ -56,7 +62,8 @@ class _HomePetugasPageState extends State<HomePetugasPage> {
                         context: context,
                         builder: (BuildContext context) => AlertDialog(
                           title: const Text('Coming Soon!'),
-                          content: const Text('Fitur ini tersedia di iterasi selanjutnya ^_^'),
+                          content: const Text(
+                              'Fitur ini tersedia di iterasi selanjutnya ^_^'),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () => Navigator.pop(context, 'OK'),
@@ -93,8 +100,9 @@ class _HomePetugasPageState extends State<HomePetugasPage> {
                 Column(
                   children: [
                     InkWell(
-                      onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ListContactPage()));
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ListContactPage()));
                       },
                       child: Container(
                         child: const Padding(
@@ -111,7 +119,6 @@ class _HomePetugasPageState extends State<HomePetugasPage> {
                             BoxShadow(color: Colors.green, spreadRadius: 2),
                           ],
                         ),
-
                       ),
                     ),
                     Container(
@@ -129,28 +136,52 @@ class _HomePetugasPageState extends State<HomePetugasPage> {
                 child: const Text(
                   "Jadwal Terbaru",
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                )
-            ),
+                )),
             FirebaseAnimatedList(
-              shrinkWrap: true,
-              query: ref.limitToLast(2),
-              itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-                return Column(
-                  children: <Widget>[
-                    ListTile(
-                      title: Text(
-                        snapshot.child('instansi').value.toString() + " - " + snapshot.child('penanggungJawab').value.toString(),
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(snapshot.child('alamat').value.toString()),
-                      leading: CircleAvatar(
-                        backgroundImage: AssetImage("assets/images/user_icon.png"),
-                      ),
+                shrinkWrap: true,
+                query: ref.limitToFirst(3),
+                itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                    Animation<double> animation, int index) {
+                  bool isChecked = snapshot.child('status').value as bool;
+                  return InkWell(
+                    child: Column(
+                      children: <Widget>[
+                        CheckboxListTile(
+                            title: Text(
+                              snapshot.child('instansi').value.toString() +
+                                  " - " +
+                                  snapshot
+                                      .child('penanggungJawab')
+                                      .value
+                                      .toString(),
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            subtitle:
+                                Text(snapshot.child('alamat').value.toString()),
+                            secondary: CircleAvatar(
+                                backgroundImage: AssetImage(
+                              "assets/images/user_icon.png",
+                            )),
+                            activeColor: Colors.green,
+                            checkColor: Colors.white,
+                            selected: isChecked,
+                            value: isChecked,
+                            onChanged: (bool? value) async {
+                              setState(() {
+                                isChecked = value!;
+                              });
+                              // await new Future.delayed(const Duration(seconds: 2));
+                              var key = snapshot.key;
+                              DatabaseReference up =
+                                  FirebaseDatabase.instance.ref("jadwal/$key");
+                              up.update({
+                                "status": true,
+                              });
+                            })
+                      ],
                     ),
-                  ],
-                );
-              }
-            )
+                  );
+                }),
           ],
         ),
       ),

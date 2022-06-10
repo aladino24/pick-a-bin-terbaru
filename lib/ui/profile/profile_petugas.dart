@@ -3,6 +3,7 @@ import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
 import 'package:boilerplate/ui/authentication/choose_role.dart';
 import 'package:boilerplate/ui/login/login_petugas.dart';
 import 'package:boilerplate/ui/login/login_warga.dart';
+import 'package:boilerplate/ui/update_profile/update_petugas.dart';
 import 'package:boilerplate/utils/routes/routes.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
@@ -61,7 +62,7 @@ class _ProfilePetugasPageState extends State<ProfilePetugasPage> {
                           height: 85.0,
                         ),
                         Container(
-                          height: 450.0,
+                          height: 500.0,
                           width: 320,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20.0),
@@ -87,7 +88,7 @@ class _ProfilePetugasPageState extends State<ProfilePetugasPage> {
                                     Text(
                                       snapshot.child('nama').value.toString(),
                                       style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: 18,
                                         color: Colors.black45,
                                       ),
                                     ),
@@ -112,7 +113,7 @@ class _ProfilePetugasPageState extends State<ProfilePetugasPage> {
                                     Text(
                                       snapshot.child('alamat').value.toString(),
                                       style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: 18,
                                         color: Colors.black45,
                                       ),
                                     ),
@@ -137,7 +138,7 @@ class _ProfilePetugasPageState extends State<ProfilePetugasPage> {
                                     Text(
                                       snapshot.child('telp').value.toString(),
                                       style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: 18,
                                         color: Colors.black45,
                                       ),
                                     ),
@@ -162,7 +163,7 @@ class _ProfilePetugasPageState extends State<ProfilePetugasPage> {
                                     Text(
                                       snapshot.child('email').value.toString(),
                                       style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: 18,
                                         color: Colors.black45,
                                       ),
                                     ),
@@ -205,6 +206,34 @@ class _ProfilePetugasPageState extends State<ProfilePetugasPage> {
                                         },
                                       ),
                                     ),
+                                    Container(
+                                    width: 270,
+                                    child: ElevatedButton(
+                                      child: const Center(
+                                        child: Text(
+                                          'Update Profile',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.green,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20.0),
+                                        ),
+                                      ),
+                                      
+                                      onPressed: (){
+                                        // SharedPreferences prefs = await SharedPreferences.getInstance();
+                                        // // prefs.remove('uid');
+                                        // prefs.clear();
+                                        // authService.logout();
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => UpdatePetugasPage()));
+                                      },
+                                    ),
+                                  ),
                                   ],
                                 ),
                               ),

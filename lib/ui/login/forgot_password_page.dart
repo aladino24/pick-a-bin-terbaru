@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:boilerplate/data/service/auth_service.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
@@ -8,7 +9,13 @@ class ForgotPasswordPage extends StatefulWidget {
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+  AuthService authService = AuthService();
+  final TextEditingController _emailController = new TextEditingController();
   @override
+  void dispose(){
+    _emailController.dispose();
+    super.dispose();
+  }
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
@@ -81,6 +88,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         ),
                       ),
                       TextFormField(
+                         controller: _emailController,
                           decoration: InputDecoration(
                               prefixIcon: Icon(
                                 Icons.email,
@@ -105,7 +113,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         height: 50,
                         width: double.infinity,
                         child: RaisedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            final String email =
+                                _emailController.text.trim();
+                            authService.resetPassword(email);                          
+                          },
                           color: Colors.green,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
